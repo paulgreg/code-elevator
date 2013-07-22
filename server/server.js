@@ -2,6 +2,16 @@ var server = function() {
 
     var start = function(port) {
 
+        var checkHost = function(req) {
+            console.log('request from ', req.host);
+            var fromLocalhost   = req.host === 'localhost';
+            var fromServer      = req.host === '10.1.2.86';
+            if (fromServer || fromLocalhost) {
+            } else {
+                throw new Error();
+            }
+        };
+
         var express = require('express');
         var app = express();
         app.configure(function() {
@@ -13,11 +23,13 @@ var server = function() {
         });
         /* APIs */
         app.get('/api/test', function(req, res) {
+            checkHost(req);
             console.log('Serving '+req.url);
             res.setHeader('content-type', 'application/json');
             res.send({'msg':'Hello'});
         });
         app.all('*', function(req, res) {
+            checkHost(req);
             console.log('ERROR ', req.url);
             res.send(404);
         });
