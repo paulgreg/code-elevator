@@ -6,6 +6,9 @@ tdd:
 unit:
 	./node_modules/.bin/mocha
 
+func:
+	./node_modules/.bin/jasmine-node --coffee --verbose ./test/frisby
+
 debug:
 	./node_modules/.bin/nodemon --debug server/launcher.js
 
