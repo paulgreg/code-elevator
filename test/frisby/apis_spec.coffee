@@ -8,6 +8,18 @@ frisby.globalSetup({
 })
 
 frisby
+    .create('Get /')
+    .get(HOST + '/')
+    .expectStatus(200)
+    .toss()
+
+frisby
+    .create('Get /api/notfound')
+    .get(HOST + '/api/notfound')
+    .expectStatus(404)
+    .toss()
+
+frisby
     .create('Get /api/test data')
     .get(HOST + '/api/test')
     .expectStatus(200)
