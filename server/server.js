@@ -2,9 +2,6 @@ var server = function() {
 
     var start = function(port) {
 
-        var elevator = require('./elevator')();
-
-
         // Express configuration
 
         var express = require('express');
@@ -23,13 +20,16 @@ var server = function() {
             app.use(express.static(__dirname+'/../www/'));
             app.use(function(req, res, next){
                 // Logging all incoming request
-                console.log('%s %s', req.method, req.url);
+                console.log('< %s %s', req.method, req.url);
                 checkHost(req);
                 next();
             });
             app.use(app.router);
         });
 
+        // Elevator
+
+        var elevator = require('./elevator')();
 
         // APIs
 
@@ -38,10 +38,11 @@ var server = function() {
         });
         app.get('/nextCommand', function(req, res) {
             var state = elevator.nextCommand();
-            console.log(state);
+            console.log('>', state);
             res.send(state);
         });
         app.get('/go', function(req, res) {
+            elevator.go(parseInt(req.query.floorToGo, 10));
             res.send(200);
         });
         app.get('/userHasEntered', function(req, res) {
@@ -56,12 +57,16 @@ var server = function() {
             res.send(200);
         });
         app.get('/call', function(req, res) {
-            //floorToGo = req.query.atFloor;
-            //to = req.query.to;
+            elevator.call(parseInt(req.query.atFloor, 10), req.query.to);
             res.send(200);
         });
 
-        // If we arrive here, we serve a 404
+        // Debug/info URL
+        app.get('/infos', function(req, res) {
+            res.send(elevator.infos());
+        });
+
+        // If request wasn‘t handle before, returns a 404
         app.all('*', function(req, res) {
             checkHost(req);
             console.log('ERROR ', req.url);

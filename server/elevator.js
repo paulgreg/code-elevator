@@ -1,33 +1,81 @@
-var elevator = function(_atFloor, _to, _floorToGo, _open) {
+var elevator = function(_currentFloor) {
 
-    var atFloor = _atFloor || 0;
-    var to = _to || '';
-    var floorToGo = _floorToGo || 0;
-    var open = _open === true;
-    var state = 'NOTHING';
+    var open = false,
+        currentFloor = _currentFloor || 0,
+        calls = [ false, false, false, false, false ];
 
     var reset = function() {
-        atFloor = 0;
-        to = '';
-        floorToGo = 0;
-        isOpen = true;
-        state = 'NOTHING';
+        open = false;
+        currentFloor = 0;
+        calls = [ false, false, false, false, false ];
     };
 
     var nextCommand = function() {
-        if (!open) {
-            if (to === 'UP')        state = 'UP';
-            if (to === 'DOWN')      state = 'DOWN';
+        var targetedFloor = nextStop();
+
+        if (open) {
+            if (targetedFloor !== false) {
+                open = false;
+                return 'CLOSE';
+            }
+        } else if (!open) {
+           if (targetedFloor !== false) {
+               if (targetedFloor === currentFloor) {
+                   open = true;
+                   removeStop(currentFloor);
+                   return 'OPEN';
+               } else {
+                   if (targetedFloor < currentFloor) {
+                       currentFloor--;
+                       return 'DOWN';
+                   } else {
+                       currentFloor++;
+                       return 'UP';
+                   }
+               }
+           }
         }
-        else {
-            state = 'NOTHING';
+
+        return 'NOTHING';
+    };
+
+    var nextStop = function() {
+        for(var i = 0; i < calls.length; i++) {
+            if (calls[i] === true) { 
+                return i;
+            }
         }
-        return state;
+        return false;
+    };
+
+    var addStop = function(floor) {
+        calls[floor] = true;
+    };
+
+    var removeStop = function(floor) {
+        calls[floor] = false;
+    };
+
+    var call = function(_atFloor, _to) {
+        addStop(_atFloor);
+    };
+
+    var go = function(_floorToGo) {
+        addStop(_floorToGo);
     };
 
     return {
         'reset': reset,
-        'nextCommand': nextCommand
+        'nextCommand': nextCommand,
+        'call': call,
+        'go': go,
+        'infos': function() {
+            return {
+                'currentFloor': currentFloor,
+                'doorsOpen': open,
+                'calls': calls
+            };
+        }
     };
 };
 

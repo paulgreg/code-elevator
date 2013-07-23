@@ -45,6 +45,16 @@ frisby
     .expectStatus(200)
     .toss()
 
+frisby
+    .create('Get /infos')
+    .get(HOST + '/infos')
+    .expectStatus(200)
+    .expectJSONTypes({
+        currentFloor: Number,
+        doorsOpen: Boolean,
+        calls: Array
+    })
+    .toss()
 
 frisby
     .create('Get /api/NotFound')
