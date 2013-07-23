@@ -12,3 +12,5 @@ To use it, you‘ll need to :
 During development, you can use `make run` or `make debug`. Both will reload the app when a file changes.
 
 You can launch unit test using `make unit` or `make tdd` (Unit test will be launch each time a test changes).
+
+You can launch functional test on rest API using `make func`.
