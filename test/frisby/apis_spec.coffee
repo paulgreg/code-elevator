@@ -1,11 +1,6 @@
 frisby = require 'frisby'
-HOST = 'http://localhost:8000'
 
-frisby.globalSetup({
-    request: {
-        headers:{'Accept': 'application/json'}
-    }
-})
+HOST = 'http://localhost:8000'
 
 frisby
     .create('Get /')
@@ -14,18 +9,46 @@ frisby
     .toss()
 
 frisby
-    .create('Get /api/notfound')
-    .get(HOST + '/api/notfound')
-    .expectStatus(404)
+    .create('Get /reset ')
+    .get(HOST + '/reset')
+    .expectStatus(200)
     .toss()
 
 frisby
-    .create('Get /api/test data')
-    .get(HOST + '/api/test')
+    .create('Get /nextCommand')
+    .get(HOST + '/nextCommand')
     .expectStatus(200)
-    .expectHeaderContains('content-type', 'application/json')
-    .expectJSON({
-        "msg": "Hello"
-    })
+    .expectBodyContains('NOTHING')
+    .toss()
+
+frisby
+    .create('Get /call?atFloor=4&to=UP')
+    .get(HOST + '/call')
+    .expectStatus(200)
+    .toss()
+
+frisby
+    .create('Get /go?floorToGo=5')
+    .get(HOST + '/go')
+    .expectStatus(200)
+    .toss()
+
+frisby
+    .create('Get /userHasEntered')
+    .get(HOST + '/userHasEntered')
+    .expectStatus(200)
+    .toss()
+
+frisby
+    .create('Get /userHasExited')
+    .get(HOST + '/userHasExited')
+    .expectStatus(200)
+    .toss()
+
+
+frisby
+    .create('Get /api/NotFound')
+    .get(HOST + '/api/NotFound')
+    .expectStatus(404)
     .toss()
 
