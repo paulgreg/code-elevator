@@ -18,7 +18,7 @@ describe 'Elevator module', () ->
           elevator.nextCommand().should.equal 'NOTHING'
 
       it 'should return DOWN, DOWN, OPEN, NOTHING', () ->
-          elevator = new Elevator(2)
+          elevator = new Elevator(2, 'DOWN')
           elevator.call 0, 'DOWN'
           elevator.nextCommand().should.equal 'DOWN'
           elevator.nextCommand().should.equal 'DOWN'
@@ -35,6 +35,29 @@ describe 'Elevator module', () ->
           elevator.nextCommand().should.equal 'UP'
           elevator.nextCommand().should.equal 'OPEN'
           elevator.nextCommand().should.equal 'NOTHING'
+
+    it 'should return optimize trips', () ->
+        elevator = new Elevator(2, 'UP')
+        elevator.call 3, 'UP'
+        elevator.call 5, 'UP'
+        elevator.call 1, 'DOWN'
+        elevator.call 0, 'DOWN'
+        elevator.nextCommand().should.equal 'UP'
+        elevator.nextCommand().should.equal 'OPEN'
+        elevator.nextCommand().should.equal 'CLOSE'
+        elevator.nextCommand().should.equal 'UP'
+        elevator.nextCommand().should.equal 'UP'
+        elevator.nextCommand().should.equal 'OPEN'
+        elevator.nextCommand().should.equal 'CLOSE'
+        elevator.nextCommand().should.equal 'DOWN'
+        elevator.nextCommand().should.equal 'DOWN'
+        elevator.nextCommand().should.equal 'DOWN'
+        elevator.nextCommand().should.equal 'DOWN'
+        elevator.nextCommand().should.equal 'OPEN'
+        elevator.nextCommand().should.equal 'CLOSE'
+        elevator.nextCommand().should.equal 'DOWN'
+        elevator.nextCommand().should.equal 'OPEN'
+        elevator.nextCommand().should.equal 'NOTHING'
 
     describe '#infos', () ->
 

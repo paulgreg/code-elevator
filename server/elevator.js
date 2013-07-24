@@ -1,17 +1,23 @@
-var elevator = function(_currentFloor) {
+var elevator = function(_currentFloor, _to) {
+
+    var MAX = 5;
 
     var open = false,
         currentFloor = _currentFloor || 0,
+        to = _to || 'UP',
         calls = [ false, false, false, false, false ];
 
     var reset = function() {
         open = false;
         currentFloor = 0;
+        to = 'UP';
         calls = [ false, false, false, false, false ];
     };
 
     var nextCommand = function() {
         var targetedFloor = nextStop();
+
+        //console.log(open, currentFloor, to, calls, targetedFloor);
 
         if (open) {
             if (targetedFloor !== false) {
@@ -27,10 +33,12 @@ var elevator = function(_currentFloor) {
                } else {
                    if (targetedFloor < currentFloor) {
                        currentFloor--;
-                       return 'DOWN';
+                       to = 'DOWN';
+                       return to;
                    } else {
                        currentFloor++;
-                       return 'UP';
+                       to = 'UP';
+                       return to;
                    }
                }
            }
@@ -40,10 +48,24 @@ var elevator = function(_currentFloor) {
     };
 
     var nextStop = function() {
-        for(var i = 0; i < calls.length; i++) {
-            if (calls[i] === true) { 
-                return i;
+        if (to === 'UP' && currentFloor === MAX) {
+            to = 'DOWN';
+        } else if (to === 'DOWN' && currentFloor === 0) {
+            to = 'UP';
+        }
+        if (to === 'UP') {
+            for(var i = currentFloor; i < calls.length; i++) {
+                if (calls[i] === true) { 
+                    return i;
+                }
             }
+        } else if (to === 'DOWN') {
+            for(var j = currentFloor; j >= 0; j--) {
+                if (calls[j] === true) { 
+                    return j;
+                }
+            }
+
         }
         return false;
     };
