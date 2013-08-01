@@ -17,13 +17,11 @@ var elevator = function(_currentFloor, _to) {
     var nextCommand = function() {
         var targetedFloor = nextStop();
 
-        //console.log(open, currentFloor, to, calls, targetedFloor);
+        // console.log(open, currentFloor, to, calls, targetedFloor);
 
         if (open) {
-            if (targetedFloor !== false) {
-                open = false;
-                return 'CLOSE';
-            }
+            open = false;
+            return 'CLOSE';
         } else if (!open) {
            if (targetedFloor !== false) {
                if (targetedFloor === currentFloor) {
@@ -54,14 +52,28 @@ var elevator = function(_currentFloor, _to) {
             to = 'UP';
         }
         if (to === 'UP') {
-            for(var i = currentFloor; i < calls.length; i++) {
+            var i;
+            for(i = currentFloor; i < calls.length; i++) {
                 if (calls[i] === true) { 
                     return i;
                 }
             }
+            for(i = currentFloor; i >= 0; i--) {
+                if (calls[i] === true) { 
+                    to = 'DOWN';
+                    return i;
+                }
+            }
         } else if (to === 'DOWN') {
-            for(var j = currentFloor; j >= 0; j--) {
+            var j;
+            for(j = currentFloor; j >= 0; j--) {
                 if (calls[j] === true) { 
+                    return j;
+                }
+            }
+            for(j = currentFloor; j < calls.length; j++) {
+                if (calls[j] === true) { 
+                    to = 'UP';
                     return j;
                 }
             }
