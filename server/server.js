@@ -1,4 +1,4 @@
-var server = function() {
+var server = function(config) {
 
     var start = function(port) {
 
@@ -9,7 +9,7 @@ var server = function() {
 
         var checkHost = function(req) {
             var fromLocalhost   = req.host === 'localhost' || req.host === '127.0.0.1';
-            var fromServer      = req.host === '192.168.0.101';
+            var fromServer      = req.host === config.server;
             if (!fromServer && !fromLocalhost) {
                 console.log('Host not authorized: ', req.host);
                 throw new Error();
