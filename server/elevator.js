@@ -24,6 +24,13 @@ var elevator = function(_currentFloor, _to) {
             return 'CLOSE';
         } else if (!open) {
            if (targetedFloor !== false) {
+
+               if (to === 'UP' && (currentFloor === MAX || targetedFloor < currentFloor)) {
+                   to = 'DOWN';
+               } else if (to === 'DOWN' && (currentFloor === 0 || targetedFloor > currentFloor)) {
+                   to = 'UP';
+               }
+
                if (targetedFloor === currentFloor) {
                    open = true;
                    removeStop(currentFloor);
@@ -46,35 +53,27 @@ var elevator = function(_currentFloor, _to) {
     };
 
     var nextStop = function() {
-        if (to === 'UP' && currentFloor === MAX) {
-            to = 'DOWN';
-        } else if (to === 'DOWN' && currentFloor === 0) {
-            to = 'UP';
-        }
+        var i = currentFloor;
         if (to === 'UP') {
-            var i;
-            for(i = currentFloor; i < calls.length; i++) {
+            for(; i < calls.length; i++) {
                 if (calls[i] === true) { 
                     return i;
                 }
             }
-            for(i = currentFloor; i >= 0; i--) {
+            for(; i >= 0; i--) {
                 if (calls[i] === true) { 
-                    to = 'DOWN';
                     return i;
                 }
             }
         } else if (to === 'DOWN') {
-            var j;
-            for(j = currentFloor; j >= 0; j--) {
-                if (calls[j] === true) { 
-                    return j;
+            for(; i >= 0; i--) {
+                if (calls[i] === true) { 
+                    return i;
                 }
             }
-            for(j = currentFloor; j < calls.length; j++) {
-                if (calls[j] === true) { 
-                    to = 'UP';
-                    return j;
+            for(; i < calls.length; i++) {
+                if (calls[i] === true) { 
+                    return i;
                 }
             }
 
